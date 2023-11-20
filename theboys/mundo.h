@@ -69,13 +69,13 @@ typedef struct mundo {
 
 void Chega(int t, heroi *h, base *b, nodo_lef_t **head);
 void Espera(int t, heroi *h, base *b, nodo_lef_t **head);
-void Desuste(int t, heroi *h, base *b, nodo_lef_t **head);
+void Desiste(int t, heroi *h, base *b, nodo_lef_t **head);
 void Avisa(int t, base *b, nodo_lef_t **head);
 void Entra(int t, heroi *h, base *b, nodo_lef_t **head);
 void Sai(int t, heroi *h, base *b, nodo_lef_t **head);
 void Viaja(int t, heroi *h, base *d, nodo_lef_t **head);
 void Missao(int t, missao *m, mundo *w, nodo_lef_t **head);
-void fim(int t, mundo w);
+void Fim(int t, mundo w);
 void Comecar_Mundo(mundo *w, nodo_lef_t **lef);
 void Inicialida_Bases(mundo *w);
 void Inicializa_Herois(mundo *w);

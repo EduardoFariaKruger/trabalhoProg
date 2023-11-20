@@ -274,7 +274,7 @@ void Inicializa_Mundo(mundo *w) {
 	w->y = 0;
 }
 
-void fim(int t, mundo w) {
+void Fim(int t, mundo w) {
 	printf("%6d: FIM\n", t);
 
 	for (int i=0; i<N_HEROIS; i++) {
