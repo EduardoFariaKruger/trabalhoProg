@@ -38,23 +38,24 @@ void fila_destroi (struct fila **fila)
  * Insere dado na fila (politica FIFO). Retorna 1
  * em caso de sucesso e 0 em caso de falha.
 */
-int enqueue (struct fila *fila, int dado)
+int enqueue(struct fila *fila, int dado)
 {
     struct nodo *novo;
-    if (!(novo = malloc(sizeof(struct nodo))))
-    {
+    if (!(novo = malloc(sizeof(struct nodo)))) {
         return 0;
     }
-    if (fila->tamanho == 0)
-    {
+    novo->chave = dado;
+    novo->prox = NULL; // Inicializa o campo prox como NULL
+
+    if (fila->tamanho == 0) {
         fila->ini = novo;
         fila->fim = novo;
         fila->tamanho++;
         return 1;
     }
+
     fila->fim->prox = novo;
     fila->fim = novo;
-    novo->chave = dado;
     fila->tamanho++;
     return 1;
 }
