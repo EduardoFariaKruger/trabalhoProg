@@ -47,7 +47,7 @@ typedef struct base {
 	nodo *espera; 
 } base;
 
-typedef struct Missao {
+typedef struct missao {
 	int id;
     coord coordenadas;
 	conjunto *habilidadesNec;

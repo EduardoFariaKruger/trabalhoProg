@@ -137,8 +137,8 @@ void missao(int t, missao *m, mundo *w, nodo_lef_t **head) {
     shellSort(basesProximas, N_BASES, m->coordenadas.x, m->coordenadas.y);
 
     // Inicializa o conjunto de habilidades
-    conjunto *ConjuntoHabilidades = NULL;
-	conjunto *CJTHeroisPresentes;
+    conjunto *ConjuntoHabilidades = cria_cjt(N_HABILIDADES);
+	conjunto *CJTHeroisPresentes = cria_cjt(N_HEROIS);
 
     int j = 0;
     int habilidadesEncontradas = 0;
@@ -147,18 +147,19 @@ void missao(int t, missao *m, mundo *w, nodo_lef_t **head) {
 
         // Reseta skillU para cada base
         destroi_cjt(ConjuntoHabilidades);
-        skillU = NULL;
+        ConjuntoHabilidades = NULL;
 
         // Itera por cada herói presente na base
-        while (presentes != NULL) {
-            int heroiId = presentes->data;
+        for(int i = 0, i < cardinalidade_cjt(CJTHeroisPresentes))
+        {
+            int heroiId = CJTHeroisPresentes->data;
             // Unindo as habilidades do herói atual
-            uniao(skillU, w->heroes[heroiId].skills, &skillU);
+            uniao_cjt(ConjuntoHabilidades, w->heroes[heroiId].skills, &ConjuntoHabilidades);
             presentes = presentes->prox;
         }
    
 	
-        if (contem(skillU, m->skillReq)) {
+        if (contem(ConjuntoHabilidades, m->habilidadesNec)) {
             bmp = j;
             habilidadesEncontradas = 1;
         }
@@ -181,7 +182,7 @@ void missao(int t, missao *m, mundo *w, nodo_lef_t **head) {
     }
 
     // Libera o conjunto de habilidades
-    freeConjunto(skillU); // Liberar recursos alocados
+    destroi_cjt(skillU); // Liberar recursos alocados
 }
 
 void Inicializa_Missoes(mundo *w) {
@@ -194,9 +195,7 @@ void Inicializa_Missoes(mundo *w) {
 		(w->missoes[i]).coordenadas.y = aleat(0, N_TAMANHO_MUNDO-1);		
 		numHabilidades = aleat(6, 10);
 		
-		for (int j = 0; j<numHabilidades; j++) {
-			w->missoes[i].habilidadesNec = NULL;
-		}
+		w->missoes[i].habilidadesNec = cria_cjt(numHabilidades);
 		
 		for (int j = 0; j<numHabilidades; j++) {
 			habilidade = aleat(1,10);
@@ -215,4 +214,102 @@ void Inicialida_Bases(mundo *w) {
 		w->bases[i].numhHeroisPresentes = NULL;
 		w->bases[i].espera = NULL;
 	}
+}
+
+void inicializaHerois(mundo *w) {
+	int numHabilidades, habilidade;
+
+	for (int i = 0; i<N_HEROIS; i++) {
+		w->herois[i].id = i;
+		w->herois[i].xp = 0;
+		w->herois[i].paciencia = aleat(0,100);
+		w->herois[i].velocidade = aleat(50, 5000);
+		
+		numHabilidades = aleat(1,3);
+		
+		w->herois[i].habilidades = cria_cjt(numHabilidades);
+		
+		for (int j = 0; j<numHabilidades; j++) {
+			habilidade = aleat(1,10);
+			insere_cjt(&(w->herois[i].habilidades), habilidade);
+		}
+	}
+}
+
+void inicializaMissoes(mundo *w) {
+	int numHabilidades, habilidade;
+	
+	for (int i = 0; i<N_MISSOES; i++) {
+		w->missoes[i].id = i;
+		w->missoes[i].coordenadas.x = aleat(0, N_TAMANHO_MUNDO-1);
+		w->missoes[i].coordenadas.y = aleat(0, N_TAMANHO_MUNDO-1);		
+		numHabilidades = aleat(6, 10);
+		
+	    w->missoes[i].habilidadesNec = cria_cjt(numHabilidades);
+		
+		for (int j = 0; j<numHabilidades; j++) {
+			habilidade = aleat(1,10);
+			insere_cjt(&(w->missoes[i].habilidadesNec), habilidade);
+		}
+	}
+
+}
+
+void inicializaMundo(mundo *w) {
+	w->tempo = 0;
+
+	w->numHerois = N_HEROIS;
+	w->numBases = N_BASES;
+	w->numMissoes = N_MISSOES;
+	w->numHabilidades = N_HABILIDADES;
+	
+	w->numMissoesCumpridas = 0;
+	w->numTentativasDeMissoes = 0;
+
+	inicializaMissoes(w);
+	inicializaBases(w);
+	inicializaHerois(w);
+
+	w->x = 0;
+	w->y = 0;
+}
+
+void fim(int t, mundo w) {
+	printf("%6d: FIM\n", t);
+
+	for (int i=0; i<N_HEROIS; i++) {
+		printf("HEROI %2d PAC %3d VEL %4d EXP %4d HABS [ ", i, w.herois[i].paciencia,
+											w.herois[i].velocidade,
+											w.herois[i].xp);
+		
+		conjunto *atual = w.herois[i].habilidades; 
+		imprime(atual);
+		printf("]\n");
+	}
+		double tryRatio = (double)w.tentativas / w.nMissions;
+		double completude = (double)w.cumpridas / w.nMissions;
+		printf("%d/%d MISSOES CUMPRIDAS (%.2f%%), MEDIA %.2f TENTATIVAS/MISSAO\n",
+       		w.cumpridas, N_MISSOES,
+       		100*completude,
+       		tryRatio);
+
+		
+
+	for (int i = 0; i < N_HEROIS; i++) {
+	  freeConjunto(w.heroes[i].skills);
+	}
+	
+	for (int i = 0; i<N_BASES; i++) {
+		freeQueue(w.bases[i].espera);
+	}
+
+	for (int i = 0; i < N_BASES; i++) {
+	  freeConjunto(w.bases[i].presentes);
+	  // Libere também a fila de espera, se aplicável
+	}
+
+	for (int i = 0; i < N_MISSOES; i++) {
+	  freeConjunto(w.missions[i].skillReq);
+	}
+
 }
