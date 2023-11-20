@@ -60,7 +60,7 @@ int insere_cjt (struct conjunto *c, int elemento)
 {
     if(!pertence_cjt(c, elemento))
     {
-        if(c->card > c->max)
+        if(c->card >= c->max)
         {
             return 0;
         }
@@ -140,6 +140,10 @@ int sao_iguais_cjt (struct conjunto *c1, struct conjunto *c2)
  */
 struct conjunto *diferenca_cjt (struct conjunto *c1, struct conjunto *c2)
 {
+    if (c1 == NULL || c2 == NULL)
+    {
+        return NULL;
+    }
     struct conjunto *novo;
     novo = cria_cjt(c1->card);
     for (int i = 0; i < c1->card; i++)
@@ -158,6 +162,10 @@ struct conjunto *diferenca_cjt (struct conjunto *c1, struct conjunto *c2)
  */
 struct conjunto *interseccao_cjt (struct conjunto *c1, struct conjunto *c2)
 {
+    if (c1 == NULL || c2 == NULL)
+    {
+        return NULL;
+    }
     struct conjunto *novo;
     if (c1->card > c2->card)
     {
