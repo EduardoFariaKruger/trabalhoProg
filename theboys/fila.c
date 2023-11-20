@@ -99,3 +99,16 @@ int fila_vazia (struct fila *fila)
 {
     return (fila->tamanho == 0);
 }
+
+void fila_imprime(struct fila *fila) {
+    struct nodo *atual = fila->ini;
+
+    printf("[ ");
+    
+    while (atual != NULL) {
+        printf("%d ", atual->chave);
+        atual = atual->prox;
+    }
+
+    printf("]\n");
+}
