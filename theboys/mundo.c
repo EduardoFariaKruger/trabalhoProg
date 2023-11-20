@@ -9,7 +9,7 @@ int aleat(int min, int max){
     return rand() % (max + 1 - min) + min;
 }
 
-void chega(int t, heroi *h, base *b, nodo_lef_t **head) {
+void Chega(int t, heroi *h, base *b, nodo_lef_t **head) {
 	h->base = b->id;
 	int espera;
 	h->coordenada.x = b->coordenadas.x;
@@ -31,14 +31,14 @@ void chega(int t, heroi *h, base *b, nodo_lef_t **head) {
 	}
 }
 
-void espera(int t, heroi *h, base *b, nodo_lef_t **head) {
+void Espera(int t, heroi *h, base *b, nodo_lef_t **head) {
 	insere_lef(&(b->espera), h->id);
 	insere_lef(head, t, AVISA, h->id, b->id);
 	
 	printf("%6d: ESPERA HEROI %2d BASE %d (%d)\n", t, h->id, b->id, fila_tamanho(b->espera));
 }
 
-void desiste(int t, heroi *h, base *b, nodo_lef_t **head) {
+void Desiste(int t, heroi *h, base *b, nodo_lef_t **head) {
 	//escolhe base d aleatoria	
 	int Idaleatorio = aleat(0,N_BASES-1);
 
@@ -47,7 +47,7 @@ void desiste(int t, heroi *h, base *b, nodo_lef_t **head) {
 	printf("%6d: DESISTE HEROI %2d BASE %d\n", t, h->id, b->id);
 }
 
-void avisa(int t, base *b, nodo_lef_t **head) {
+void Avisa(int t, base *b, nodo_lef_t **head) {
 	int id;
 	
 	printf("%6d: AVISA PORTEIRO BASE %d (%2d/%2d) FILA [ ", t, b->id, cardinalidade_cjt(b->numhHeroisPresentes), b->capacidade);
@@ -62,14 +62,14 @@ void avisa(int t, base *b, nodo_lef_t **head) {
 	}
 }
 
-void entra(int t, heroi *h, base *b, nodo_lef_t **head) {
+void Entra(int t, heroi *h, base *b, nodo_lef_t **head) {
 	int tpb = 15 + (h->paciencia)*aleat(1,20);
 	insere_lef(head, t + tpb, SAI, h->id, b->id);
 	
 	printf("%6d: ENTRA HEROI %2d BASE %d (%2d/%2d) SAI %d\n", t, h->id, b->id, cardinalidade_cjt(b->numhHeroisPresentes), b->capacidade, t+tpb);	
 }
 
-void sai(int t, heroi *h, base *b, nodo_lef_t **head) {
+void Sai(int t, heroi *h, base *b, nodo_lef_t **head) {
 	int bId = aleat(0,7);
 
 	insere_lef(head, t, VIAJA, h->id, bId);
@@ -79,7 +79,7 @@ void sai(int t, heroi *h, base *b, nodo_lef_t **head) {
 	printf("%6d: SAI HEROI %2d BASE %d (%2d/%2d)\n", t, h->id, b->id, cardinalidade_cjt(b->numhHeroisPresentes), b->capacidade);
 }
 
-void viaja(int t, heroi *h, base *d, nodo_lef_t **head) {
+void Viaja(int t, heroi *h, base *d, nodo_lef_t **head) {
 	unsigned int dx = (d->coordenadas.x) - (h->coordenada.x);
 	unsigned int dy = (d->coordenadas.y) - (h->coordenada.y);
 	
@@ -118,7 +118,7 @@ void shellSort(int arr[], int n) {
     }
 }
 
-void missao(int t, missao *m, mundo *w, nodo_lef_t **head) {
+void Missao(int t, missao *m, mundo *w, nodo_lef_t **head) {
 	(w->numTentativasDeMissoes)++;
     printf("%6d: MISSAO %d HAB REQ: [ ", t, m->id);
     if (m->habilidadesNec != NULL)
@@ -216,7 +216,7 @@ void Inicialida_Bases(mundo *w) {
 	}
 }
 
-void inicializaHerois(mundo *w) {
+void Inicializa_Herois(mundo *w) {
 	int numHabilidades, habilidade;
 
 	for (int i = 0; i<N_HEROIS; i++) {
@@ -236,7 +236,7 @@ void inicializaHerois(mundo *w) {
 	}
 }
 
-void inicializaMissoes(mundo *w) {
+void Inicializa_Missoes(mundo *w) {
 	int numHabilidades, habilidade;
 	
 	for (int i = 0; i<N_MISSOES; i++) {
@@ -255,7 +255,7 @@ void inicializaMissoes(mundo *w) {
 
 }
 
-void inicializaMundo(mundo *w) {
+void Inicializa_Mundo(mundo *w) {
 	w->tempo = 0;
 
 	w->numHerois = N_HEROIS;
@@ -286,30 +286,30 @@ void fim(int t, mundo w) {
 		imprime(atual);
 		printf("]\n");
 	}
-		double tryRatio = (double)w.tentativas / w.nMissions;
-		double completude = (double)w.cumpridas / w.nMissions;
+		double tryRatio = (double)w.numTentativasDeMissoes / w.numMissoes;
+		double completude = (double)w.numMissoesCumpridas / w.numMissoes;
 		printf("%d/%d MISSOES CUMPRIDAS (%.2f%%), MEDIA %.2f TENTATIVAS/MISSAO\n",
-       		w.cumpridas, N_MISSOES,
+       		w.numMissoesCumpridas, N_MISSOES,
        		100*completude,
        		tryRatio);
 
 		
 
 	for (int i = 0; i < N_HEROIS; i++) {
-	  freeConjunto(w.heroes[i].skills);
+	  destroi_cjt(w.herois[i].habilidades);
 	}
 	
 	for (int i = 0; i<N_BASES; i++) {
-		freeQueue(w.bases[i].espera);
+		fila_destroi(w.bases[i].espera);
 	}
 
 	for (int i = 0; i < N_BASES; i++) {
-	  freeConjunto(w.bases[i].presentes);
+	  destroi_cjt(w.bases[i].numhHeroisPresentes);
 	  // Libere também a fila de espera, se aplicável
 	}
 
 	for (int i = 0; i < N_MISSOES; i++) {
-	  freeConjunto(w.missions[i].skillReq);
+	  destroi_cjt(w.missoes[i].habilidadesNec);
 	}
 
 }
