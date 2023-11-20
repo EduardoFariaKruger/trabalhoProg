@@ -12,7 +12,7 @@ int main (){
 
     srand (0); /* use zero, nao faca com time (0) */
 
-	nodo_lef_t *lef = NULL;
+	nodo_lef_t *lef = cria_lef();
 	mundo w;
 	insere_lef(&lef, 0, INICIALIZA, -1, -1);
 
@@ -28,41 +28,41 @@ int main (){
 				break;
 				
 			case CHEGA:
-				Chega(lef->time, &(w.heroes[lef->data1]), &(w.bases[lef->data2]), &lef);
+				Chega(lef->tempo, &(w.herois[lef->data1]), &(w.bases[lef->data2]), &lef);
 				break;
 
 			case ESPERA:
-				Espera(lef->time, &(w.heroes[lef->data1]), &(w.bases[lef->data2]), &lef);
+				Espera(lef->tempo, &(w.herois[lef->data1]), &(w.bases[lef->data2]), &lef);
 				break;
 
 			case DESISTE:
-				Desiste(lef->time, &(w.heroes[lef->data1]), &(w.bases[lef->data2]), &lef);
+				Desiste(lef->tempo, &(w.herois[lef->data1]), &(w.bases[lef->data2]), &lef);
 				break;
 
 			case AVISA:
-				Avisa(lef->time, &(w.bases[lef->data2]), &lef);
+				Avisa(lef->tempo, &(w.bases[lef->data2]), &lef);
 				break; 
 
 			case ENTRA:
-				Entra(lef->time, &(w.heroes[lef->data1]), &(w.bases[lef->data2]), &lef);
+				Entra(lef->tempo, &(w.herois[lef->data1]), &(w.bases[lef->data2]), &lef);
 				break;
 
 			case VIAJA:
-				Viaja(lef->time, &(w.heroes[lef->data1]), &(w.bases[lef->data2]), &lef);
+				Viaja(lef->tempo, &(w.herois[lef->data1]), &(w.bases[lef->data2]), &lef);
 				break;
 
 			case SAI:
-				Sai(lef->time, &(w.heroes[lef->data1]), &(w.bases[lef->data2]), &lef);
+				Sai(lef->tempo, &(w.herois[lef->data1]), &(w.bases[lef->data2]), &lef);
 				break;
 
 			case MISSAO:
 				//printf("\nMISSAO TESTE");
 				//imprime(w.missions[lef->data1].skillReq);
-				missao(lef->time, &(w.missions[lef->data1]), &w, &lef);
+				missao(lef->tempo, &(w.missoes[lef->data1]), &w, &lef);
 				break;
 
 			case FIM:
-				Fim(lef->time, w);
+				Fim(lef->tempo, w);
 				break;
 
 			default:
