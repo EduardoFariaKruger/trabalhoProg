@@ -12,7 +12,8 @@ int main (){
 
     srand (0); /* use zero, nao faca com time (0) */
 
-	nodo_lef_t *lef = insere_lef();
+    lef_t cabeca* = cria_lef();
+	nodo_lef_t *lef = insere_lef(&lef, cria_evento(0, INICIALIZA, -1, -1));
 	mundo w;
 	insere_lef(&lef, 0, INICIALIZA, -1, -1);
 
